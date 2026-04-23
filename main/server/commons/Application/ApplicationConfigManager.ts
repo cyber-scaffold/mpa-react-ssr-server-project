@@ -1,7 +1,7 @@
 import os from "os";
 import path from "path";
 import { injectable } from "inversify";
-import { getRuntimeConfiguration } from "@/frameworks/mpa-ssr-tool-box/runtime";
+import { getRuntimeConfiguration } from "@/frameworks/react-ssr-tool-box/runtime";
 
 import { IOCContainer } from "@/main/server/cores/IOCContainer";
 

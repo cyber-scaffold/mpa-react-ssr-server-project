@@ -1,0 +1,29 @@
+import type { MaterielRenderType } from "@/frameworks/react-ssr-tool-box/compilation/commons/CompilationConfigManager";
+import type { CompilerProgressStatus } from "@/frameworks/react-ssr-tool-box/compilation/utils/CompilerProgressPlugin";
+import type { EveryCompileAssetsInfo } from "@/frameworks/react-ssr-tool-box/public/filterWebpackStats";
+
+export type EveryCompileAssetsInfo = {
+  javascript: string[]
+  stylesheet: string[]
+  statics: string[]
+};
+
+export type CompileAssetsDictionaryType = {
+  [alias: string]: EveryCompileAssetsInfo
+};
+
+export type SummaryDatabaseDictionaryType = {
+  [alias: string]: MaterielRenderType
+};
+
+export type CompilerProgressStatusType = CompilerProgressStatus.COMPILE | CompilerProgressStatus.EMIT | CompilerProgressStatus.DONE;
+
+export type ResourceDatabaseDictionaryType = {
+
+  status: CompilerProgressStatusType
+
+  assets: {
+    [alias: string]: EveryCompileAssetsInfo
+  }
+
+} | {};

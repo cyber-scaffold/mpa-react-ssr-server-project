@@ -7,7 +7,7 @@ import pathExists from "path-exists";
 import { injectable } from "inversify";
 
 import { IOCContainer } from "@/frameworks/mpa-ssr-build-tool/cores/IOCContainer";
-import type { MaterielCompilationInfoType } from "@/frameworks/mpa-ssr-tool-box/compilation";
+import type { MaterielCompilationInfoType } from "@/frameworks/react-ssr-tool-box/compilation";
 
 @injectable()
 export class FrameworkConfigManager {
