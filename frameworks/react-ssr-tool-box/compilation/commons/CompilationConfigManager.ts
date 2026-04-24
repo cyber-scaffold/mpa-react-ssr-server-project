@@ -5,6 +5,7 @@ import { IOCContainer } from "@/frameworks/react-ssr-tool-box/compilation/cores/
 import { materielsConfigTransformer } from "@/frameworks/react-ssr-tool-box/compilation/utils/materielsConfigTransformer";
 
 import type { MaterielInfoByAliasDictionaryType } from "@/frameworks/react-ssr-tool-box/compilation/utils/materielsConfigTransformer";
+import type { MaterielPairsType, PresetPairsType } from "@/frameworks/tool-box-preset-mpa";
 
 export type MaterielRenderType = {
   hydrate: boolean
@@ -31,8 +32,8 @@ export interface CompilationConfigType {
   dehydrationResourceDirectoryPath: string
   dehydrateIncludePackageList?: string[]
   dehydrateExcludePackageList?: string[]
-  dehydrationPreset: (params: any) => any
-  hydrationPreset: (params: any) => any
+  dehydrationPreset: (materielPairs: MaterielPairsType) => Promise<PresetPairsType>
+  hydrationPreset: (materielPairs: MaterielPairsType) => Promise<PresetPairsType>
   materielArrayList: MaterielCompilationInfoType[]
 };
 
@@ -44,8 +45,8 @@ export interface CustmerInputCompilationConfigType {
   dehydrationResourceDirectoryName?: string
   dehydrateIncludePackageList?: string[]
   dehydrateExcludePackageList?: string[]
-  dehydrationPreset: (params: any) => any
-  hydrationPreset: (params: any) => any
+  dehydrationPreset: (materielPairs: MaterielPairsType) => Promise<PresetPairsType>
+  hydrationPreset: (materielPairs: MaterielPairsType) => Promise<PresetPairsType>
   materiels?: MaterielCompilationInfoType[]
 };
 
@@ -124,9 +125,9 @@ export class CompilationConfigManager {
    * **/
   private dehydrateExcludePackageList: string[] = [];
 
-  private dehydrationPreset: (params: any) => any;
+  private dehydrationPreset: (materielPairs: MaterielPairsType) => Promise<PresetPairsType>;
 
-  private hydrationPreset: (params: any) => any;
+  private hydrationPreset: (materielPairs: MaterielPairsType) => Promise<PresetPairsType>;
 
   /** 基于用户的配置合并覆盖掉原来的属性然后重新计算一遍 **/
   public async initialize(inputCustmerConfig: CustmerInputCompilationConfigType) {

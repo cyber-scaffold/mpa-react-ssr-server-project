@@ -4,14 +4,14 @@ import { promisify } from "util";
 
 import { computedPublicPathWithRuntime } from "@/frameworks/react-ssr-tool-box/compilation/utils/computedPublicPathWithRuntime";
 
-import type { MaterielCompilationInfoType } from "@/frameworks/react-ssr-tool-box/compilation/commons/CompilationConfigManager";
+import type { MaterielPairsType, PresetPairsType } from "../public/types.d";
 
-export async function dehydrationEntryFilePreset(materielPairs: [alias: string, detail: MaterielCompilationInfoType][]) {
+export async function dehydrationEntryFilePreset(materielPairs: MaterielPairsType): Promise<PresetPairsType> {
   const hydrationTemplateFileContent = await promisify(fs.readFile)(path.resolve(__dirname, "../templates/dehydration.entry.template"), "utf-8");
   /** 基于alias生成新的入口文件内容 **/
-  const virtualFileVolumePairs = await Promise.all(materielPairs.map(async ([alias, materielDetailInfo]) => {
-    const virtualEntryModuleName = `./${alias}.entry.tsx`;
-    const virtualEntryModuleContent = hydrationTemplateFileContent
+  const virtualFileVolumePairs: PresetPairsType = await Promise.all(materielPairs.map(async ([alias, materielDetailInfo]) => {
+    const virtualEntryModuleName: string = `./${alias}.entry.tsx`;
+    const virtualEntryModuleContent: string = hydrationTemplateFileContent
       .replace("$$sourceCodeFilePath$$", materielDetailInfo.source)
       .replace("$$webpackPublicPathWithRuntime$$", computedPublicPathWithRuntime(materielDetailInfo));
     return [virtualEntryModuleName, virtualEntryModuleContent];
