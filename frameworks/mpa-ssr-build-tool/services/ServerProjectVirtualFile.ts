@@ -30,7 +30,7 @@ export class ServerProjectVirtualFile {
   ) { };
 
   private async getVirtualEntryFileAndReplaceContent(): Promise<string> {
-    const originContent = await promisify(fs.readFile)(path.resolve(__dirname, "../templates/virtualEntryFile.template"), "utf-8");
+    const originContent = await promisify(fs.readFile)(path.resolve(__dirname, "../templates/virtual-server-entry.template"), "utf-8");
     return originContent;
   };
 

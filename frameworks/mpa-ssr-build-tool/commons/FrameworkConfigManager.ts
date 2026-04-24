@@ -63,12 +63,6 @@ export class FrameworkConfigManager {
   private swaggerResourceDirectoryDestinationPath = path.resolve(this.assetsDirectoryPath, "./swagger/");
 
   /**
-   * @deprecated
-   * 虚拟入口文件最终输出的物理位置
-   * **/
-  private frameworkEntryFileDestinationPath = path.resolve(this.assetsDirectoryPath, "./index.js");
-
-  /**
    * 针对脱水物料的优化
    * 从项目的配置文件中获取到必须需要被打包的模块信息
    * 只所以要这么做是因为如果全部模块都被排除的话在引用.css这类文件的时候会被翻译成require("<filename>.css")就会导致样式表编译失败
@@ -76,7 +70,6 @@ export class FrameworkConfigManager {
    * 所以需要在项目文件中手动指定一下,避免出现错误
    * **/
   private dehydrateIncludePackageList: string[] = [];
-
 
   /**
    * 针对脱水物料的优化
@@ -174,7 +167,6 @@ export class FrameworkConfigManager {
       extractSwaggerGlobExpression: this.extractSwaggerGlobExpression,
       swaggerResourceDirectorySourcePath: this.swaggerResourceDirectorySourcePath,
       swaggerResourceDirectoryDestinationPath: this.swaggerResourceDirectoryDestinationPath,
-      // frameworkEntryFileDestinationPath: this.frameworkEntryFileDestinationPath,
       dehydrateIncludePackageList: this.dehydrateIncludePackageList,
       dehydrateExcludePackageList: this.dehydrateExcludePackageList,
       materiels: this.materiels

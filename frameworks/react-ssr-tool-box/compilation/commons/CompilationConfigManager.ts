@@ -31,6 +31,8 @@ export interface CompilationConfigType {
   dehydrationResourceDirectoryPath: string
   dehydrateIncludePackageList?: string[]
   dehydrateExcludePackageList?: string[]
+  dehydrationPreset: (params: any) => any
+  hydrationPreset: (params: any) => any
   materielArrayList: MaterielCompilationInfoType[]
 };
 
@@ -42,6 +44,8 @@ export interface CustmerInputCompilationConfigType {
   dehydrationResourceDirectoryName?: string
   dehydrateIncludePackageList?: string[]
   dehydrateExcludePackageList?: string[]
+  dehydrationPreset: (params: any) => any
+  hydrationPreset: (params: any) => any
   materiels?: MaterielCompilationInfoType[]
 };
 
@@ -120,6 +124,9 @@ export class CompilationConfigManager {
    * **/
   private dehydrateExcludePackageList: string[] = [];
 
+  private dehydrationPreset: (params: any) => any;
+
+  private hydrationPreset: (params: any) => any;
 
   /** 基于用户的配置合并覆盖掉原来的属性然后重新计算一遍 **/
   public async initialize(inputCustmerConfig: CustmerInputCompilationConfigType) {
@@ -144,6 +151,12 @@ export class CompilationConfigManager {
     if (inputCustmerConfig.dehydrateExcludePackageList) {
       this.dehydrateExcludePackageList = inputCustmerConfig.dehydrateExcludePackageList;
     };
+    if (inputCustmerConfig.dehydrationPreset) {
+      this.dehydrationPreset = inputCustmerConfig.dehydrationPreset;
+    };
+    if (inputCustmerConfig.hydrationPreset) {
+      this.hydrationPreset = inputCustmerConfig.hydrationPreset;
+    };
     if (inputCustmerConfig.materiels) {
       const { hydrate, dehydrate } = materielsConfigTransformer(inputCustmerConfig.materiels);
       this.dehydrateDictionary = dehydrate;
@@ -167,6 +180,8 @@ export class CompilationConfigManager {
       dehydrateExcludePackageList: this.dehydrateExcludePackageList,
       dehydrateDictionary: this.dehydrateDictionary,
       hydrateDictionary: this.hydrateDictionary,
+      dehydrationPreset: this.dehydrationPreset,
+      hydrationPreset: this.hydrationPreset,
       materielArrayList: this.materielArrayList
     };
   };

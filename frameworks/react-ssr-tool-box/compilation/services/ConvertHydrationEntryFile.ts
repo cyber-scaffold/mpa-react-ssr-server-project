@@ -2,13 +2,12 @@ import fs from "fs";
 import path from "path";
 import memfs from "memfs";
 import { ufs } from "unionfs";
-import { promisify } from "util";
 import { v4 as uuid } from "uuid";
 import { fromPairs } from "lodash";
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 
 import { IOCContainer } from "@/frameworks/react-ssr-tool-box/compilation/cores/IOCContainer";
-import { computedPublicPathWithRuntime } from "@/frameworks/react-ssr-tool-box/compilation/utils/computedPublicPathWithRuntime";
+import { CompilationConfigManager } from "@/frameworks/react-ssr-tool-box/compilation/commons/CompilationConfigManager";
 
 import type { MaterielCompilationInfoType } from "@/frameworks/react-ssr-tool-box/compilation/commons/CompilationConfigManager";
 import type { Compiler, EntryObject } from "webpack";
@@ -32,9 +31,9 @@ export class ConvertHydrationEntryFile {
 
   private webpackEntryPoints: EntryObject = {};
 
-  private async getHydrationEntryTemplateContent(): Promise<string> {
-    return await promisify(fs.readFile)(path.resolve(__dirname, "../templates/hydration.entry.template"), "utf-8");
-  };
+  constructor (
+    @inject(CompilationConfigManager) private readonly $CompilationConfigManager: CompilationConfigManager
+  ) { };
 
   /**
    * 初始化阶段
@@ -42,15 +41,8 @@ export class ConvertHydrationEntryFile {
    * 并生成webpack可以识别的entry-points对象
    * **/
   public async initialize(materielPairs: [alias: string, detail: MaterielCompilationInfoType][]) {
-    const hydrationTemplateFileContent = await this.getHydrationEntryTemplateContent();
-    /** 基于alias生成新的入口文件内容 **/
-    const virtualFileVolumePairs = await Promise.all(materielPairs.map(async ([alias, materielDetailInfo]) => {
-      const virtualEntryModuleName = `./${alias}.entry.tsx`;
-      const virtualEntryModuleContent = hydrationTemplateFileContent
-        .replace("$$sourceCodeFilePath$$", materielDetailInfo.source)
-        .replace("$$webpackPublicPathWithRuntime$$", computedPublicPathWithRuntime(materielDetailInfo));
-      return [virtualEntryModuleName, virtualEntryModuleContent];
-    }));
+    const { hydrationPreset } = this.$CompilationConfigManager.getRuntimeConfig();
+    const virtualFileVolumePairs = await hydrationPreset(materielPairs);
     /** 在内存中写入这些新入口文件的内容 **/
     memfs.vol.fromJSON(fromPairs(virtualFileVolumePairs), this.virtualDirectoryPath);
     /** 生成详细的webpackEntryPoints **/
